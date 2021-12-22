@@ -1,0 +1,4 @@
+click
+os
+sys
+mysql.connector
