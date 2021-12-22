@@ -51,12 +51,17 @@ def version(version):
 #stock.py price TSLA
 @main.command(name='price', help="\tShow the most recent price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def price(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def price(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -64,12 +69,17 @@ def price(ticker):
 
 @main.command(name='low', help="\tShow the lowest day price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def low(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def low(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -77,12 +87,17 @@ def low(ticker):
 
 @main.command(name='high', help="\tShow the highest day price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def price(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def price(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -90,12 +105,17 @@ def price(ticker):
 
 @main.command(name='close', help="\tShow the day closing price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def price(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def price(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -103,12 +123,17 @@ def price(ticker):
 
 @main.command(name='open', help="\tShow the day openning price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def price(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def price(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -116,12 +141,17 @@ def price(ticker):
 
 @main.command(name='volume', help="\tShow the volume during the day of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def price(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def price(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -129,12 +159,17 @@ def price(ticker):
 
 @main.command(name='summary', help="\tShow a brief summary of the company's trading day using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def summary(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def summary(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -142,12 +177,17 @@ def summary(ticker):
 
 @main.command(name='afterhours', help="\tShow the after hours trading price! using its ticker")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-def afterhours(ticker):
+@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+def afterhours(ticker, date):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT adjclose FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-        for row in cursor:
-            click.echo(row)
+        if (date):
+            cursor.execute("SELECT ticker, date, adjclose FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            click.echo(cursor.fetchone())
+        else:
+            cursor.execute("SELECT ticker, date, adjclose FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+            for row in cursor:
+                click.echo(row)
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -180,7 +220,7 @@ def news(ticker, publisher):
 def desc(ticker):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, companyName, description FROM StockInfo INNER JOIN Company ON StockInfo.ticker=Company.ticker WHERE ticker='{ticker}'")
+        cursor.execute("SELECT ticker, companyName, description FROM StockInfo INNER JOIN Company ON StockInfo.ticker=Company.ticker WHERE ticker='{ticker}';")
         for row in cursor:
             click.echo(row)
     except:

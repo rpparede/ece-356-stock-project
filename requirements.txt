@@ -1,4 +1,3 @@
 click
-os
-sys
+datetime
 mysql.connector
