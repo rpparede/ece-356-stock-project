@@ -38,7 +38,7 @@ def disconnect(connection, cursor):
 @click.group()
 def main():
     """
-    CLI for stock information
+    CLI grouping for stock information
     """
     pass
 
@@ -46,7 +46,13 @@ def main():
 def version(version):
     click.echo(version)
 
-#TODO: command update
+# @main.command(name='update', help="\tUpdate all price history tables with new data")
+# def update():
+#     connection, cursor = connect()
+#     try:
+        
+#     except:
+#         click.echo("Could not insert data into ")
 
 #stock.py price TSLA
 @main.command(name='price', help="\tShow the most recent price of a company using its ticker!")
