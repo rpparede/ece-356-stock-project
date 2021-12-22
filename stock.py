@@ -4,8 +4,8 @@ import mysql.connector
 
 version = "v0.10"
 
-userid = "db356test1"
-server = "marmoset03.shoshin.uwaterloo.ca"
+userid = "lamehta"
+server = "localhost"
 database = "db_{userid}"
 password = "password"
 
@@ -42,12 +42,13 @@ def main():
     """
     pass
 
-@main.command(name='-v', help="\tShow version number of CLI")
+@main.command(name='version', help="\tShow version number of CLI")
 def version(version):
     click.echo(version)
 
 #TODO: command update
 
+#stock.py price TSLA
 @main.command(name='price', help="\tShow the most recent price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
 def price(ticker):
@@ -152,6 +153,7 @@ def afterhours(ticker):
     finally:
         disconnect(connection, cursor)
 
+#stock.py news -p FOXNEWS TSLA
 @main.command(name='news', help="\tShow the latest news!")
 @click.option('-p', '--publisher', help="Show only news from a specific publisher")
 @click.argument('ticker', default='AAPL', type=click.STRING)
@@ -222,17 +224,94 @@ def user(username, email):
     finally:
         disconnect(connection, cursor)
 
-
-@main.command(name='talk', help='\tConversate with others on this stock!')
+@main.command(name='talk', help='\tShow latest comments on a given stock!')
 @click.argument('ticker', default='N/A', type=click.string)
-@click.option('-u', '--user', help="Input your username!")
-@click.option('-m', '--message', required=True, help="Type your message here in quotes")
-def talk(ticker, user):
+def talk(ticker):
     connection, cursor = connect()
     try:
-        now = datetime.now()
+        cursor.execute("SELECT ticker, date, user, message FROM comment LIMIT 10")
+        for row in cursor:
+            click.echo(row)
+    except:
+        click.echo("No comments found for the stock, try a different one or come back other time")
+    finally:
+        disconnect(connection, cursor)
         
 
 
+@main.command(name='comment', help='\tConversate with others on this stock!')
+@click.argument('ticker', default='N/A', type=click.string)
+@click.option('-u', '--user', help="Input your username!")
+@click.option('-m', '--message', required=True, help="Type your message after the tag in quotes")
+def comment(ticker, user):
+    connection, cursor = connect()
+    try:
+        now = datetime.now()
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("SELECT MAX(commentID) FROM Comment")
+        currentID = cursor.fetchOne() + 1
+        cursor.execute("INSERT INTO comment (commentID, ticker, date, user, message) VALUES ({currentID}, {ticker}, {formatted_date}, {user}, {message});")
+    except:
+        click.echo("Unfortunately no messages here :(")
+    finally:
+        disconnect(connection, cursor)
+
+
+@main.command(name='watch', help='\tShow 10 recent stock watches made by given user')
+@click.argument('username', type=click.STRING)
+@click.option('-v', '--viewall')
+def watch(username, viewall):
+    connection, cursor = connect()
+    try:
+        if (viewall):
+            cursor.execute("SELECT user, ticker, date, price, amount, totalPrice FROM Trades WHERE EXISTS(SELECT user FROM UserInfo WHERE user={username});")
+            for row in cursor:
+                click.echo(row)
+        else:
+            cursor.execute("SELECT user, ticker, date, price, amount, totalPrice FROM Trades WHERE WHERE EXISTS(SELECT user FROM UserInfo WHERE user={username});")
+            for row in cursor:
+                click.echo(row)
+    except:
+        click.echo("No watches found for that user, try a different user or come back other time")
+    finally:
+        disconnect(connection, cursor)
+  
+@main.command(name='trade', help='\tAdd trades to your watchlist!')
+@click.argument('username', type=click.STRING)
+@click.option('-t', '--ticker', required=True, help="Use this tag to make a trade on a specific company")
+@click.option('-a', '--amount', type=click.INT, help="Keep track of how many you purchased")
+def trade(username, ticker, amount):
+    connection, cursor = connect()
+    try:
+        cursor.execute("SELECT close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+        price = cursor.fetchone()
+
+        cursor.execute("SELECT ticker FROM Trades WHERE ticker='{ticker}' and user='{username}';")
+        tickerIn = cursor.fetchone()
+        if (not amount and tickerIn > 0):
+            click.echo("You have already added the ticker to your watchlist")
+        elif(amount and tickerIn > 0):
+            cursor.execute("SELECT amount FROM Trades WHERE ticker='{ticker}' and user='{username}'")
+            currAmount = cursor.fetchone()
+            newAmount = currAmount + amount
+            cursor.execute("UPDATE Trades SET amount={newAmount} WHERE ticker='{ticker}' AND user='{username}'")
+            #TODO: implement price change algebra
+        else:
+            newAmount = 0
+            if (amount):
+                newAmount = amount
+            cursor.execute("SELECT MAX(tradeID) FROM Trades")
+            currentID = cursor.fetchOne() + 1
+            now = datetime.now()
+            formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+            cursor.executes("INSERT INTO Trades(tradeID, user, ticker, date, price, amount) VALUES({currentID}, {username}, {ticker}, {formatted_date}, {price}, {newAmount}}")
+    except:
+        click.echo("Could not add {ticker} to your listing")
+    finally:
+        disconnect(connection, cursor)
+
+
+        
+ 
 if __name__== "__main__":
     main()
