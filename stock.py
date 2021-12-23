@@ -308,15 +308,18 @@ def desc(ticker):
 
 
 #TODO: trendinfo command
-
-@main.command(name='brief', help="\tSome brief data to get an initial understanding of the company")
+@main.command(name='ipobrief', help="\tSome brief data to get an initial understanding of the company")
 @click.argument('ticker', default='AAPL', type=click.STRING)
 def brief(ticker):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, companyName, ipoDate, ipoPrice, description, url FROM StockInfo INNER JOIN Company ON StockInfo.ticker=Company.ticker INNER JOIN IPOData ON Company.ticker=IPOData.ticker WHERE ticker='" + ticker + "'")
-        for row in cursor:
-            click.echo(row)
+        cursor.execute("SELECT ticker, name, sector, ipo_date, first_day_high, first_day_low, first_day_open, first_day_close, first_day_volume FROM stock_info INNER JOIN company USING(ticker) INNER JOIN ipo_data USING(ticker) WHERE ticker='" + ticker + "'")
+        num_fields = cursor.column_names
+        click.echo(num_fields)
+        count = 0
+        for row in cursor.fetchone():
+            click.echo(str(num_fields[count]) + "\t" + str(row))
+            count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -324,20 +327,22 @@ def brief(ticker):
 
 @main.command(name='user', help='Create your user to leave your stock thoughts!')
 @click.argument('username', type=click.STRING)
-@click.option('-e', '--email', required=True, help='Lets associate your username to an email! [Required]')
-def user(username, email):
+@click.option('-n', '--name', nargs=2, required=True, help='Put your name in quotes so we can identify you! {first_name last_name} [Required]')
+def user(username, name):
     connection, cursor = connect()
+    first, last = name
+    newUser = 1
     try:
-        cursor.execute("SELECT COUNT(*) FROM userInfo WHERE user='" + username + "'")
+        cursor.execute("SELECT COUNT(*) FROM user WHERE user_name='" + username + "'")
         userCount = cursor.fetchone()
-        if (userCount <= 0):
-            cursor.execute("SELECT COUNT(email) FROM userInfo WHERE email='" + email + "'")
-            emailCount = cursor.fetchone()
-            if (emailCount <= 0):
-                cursor.execute("INSERT INTO userInfo (user, email) VALUES ('" + username + "', '" + email +"')")
-                click.echo("User has been made!")
-            else:
-                click.echo("This email has already been used for another user")
+        cursor.execute("SELECT MAX(user_id) FROM user")
+        maxUser = cursor.fetchone()
+        if (maxUser[0] != 0):
+            newUser = maxUser[0] + 1
+        if (int(userCount[0]) <= 0):
+            cursor.execute("INSERT INTO user(user_id, name, last_name, user_name) VALUES (" + str(newUser) + ", '" + first +"', '" + last + "', '" + username + "');")
+            connection.commit()
+            click.echo("User has been made!")
         else:
             click.echo("This user already exists")
     except:
@@ -350,9 +355,13 @@ def user(username, email):
 def talk(ticker):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, date, user, message FROM comment LIMIT 10")
-        for row in cursor:
-            click.echo(row)
+        cursor.execute("SELECT ticker, date, user_name, content FROM comment INNER JOIN user ON comment.commenter_id=user.user_id LIMIT 10")
+        num_fields = cursor.column_names
+        click.echo(num_fields)
+        count = 0
+        for row in cursor.fetchall():
+            click.echo(row[0] + ":\t" + str(row[1]) + "\t" + row[2])
+            click.echo("comment: " + row[3])
     except:
         click.echo("No comments found for the stock, try a different one or come back other time")
     finally:
@@ -364,14 +373,29 @@ def talk(ticker):
 @click.argument('ticker', default='N/A', type=click.STRING)
 @click.option('-u', '--user', help="Input your username!")
 @click.option('-m', '--message', required=True, help="Type your message after the tag in quotes")
-def comment(ticker, user):
+def comment(ticker, user, message):
     connection, cursor = connect()
+    newID = 0
     try:
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute("SELECT MAX(commentID) FROM Comment")
-        currentID = cursor.fetchOne() + 1
-        cursor.execute("INSERT INTO comment (commentID, ticker, date, user, message) VALUES ({currentID}, {ticker}, {formatted_date}, {user}, {message});")
+        cursor.execute("SELECT MAX(comment_id) FROM comment;")
+        currentID = cursor.fetchone()
+        if (currentID[0] != None):
+            newID = currentID[0] + 1
+        if (user):
+            try:
+                cursor.execute("SELECT user_id, user_name FROM user WHERE user_name='" + user + "';")
+                user_id, newUser = cursor.fetchone()
+            except:
+                click.echo("No known user: " + user + ". Please create user with 'python stock.py user")
+        else:
+            user_id = 0
+            newUser = "ANON"
+        
+        cursor.execute("INSERT INTO comment (comment_id, date, ticker, content, commenter_id) VALUES (" + str(newID) + ", '" + formatted_date + "', '" + ticker + "', '" + message + "', " + str(user_id) + ");")
+        click.echo("Thanks for leaving your comment on " + ticker + ", check back later to see if anyone else has left a comment for you")
+        connection.commit()
     except:
         click.echo("Unfortunately no messages here :(")
     finally:
@@ -385,13 +409,27 @@ def watch(username, viewall):
     connection, cursor = connect()
     try:
         if (viewall):
-            cursor.execute("SELECT user, ticker, date, price, amount, totalPrice FROM Trades WHERE EXISTS(SELECT user FROM UserInfo WHERE user={username});")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT * FROM watchlist WHERE EXISTS(SELECT user_name FROM user WHERE user_name='" + username + "');")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchall():
+                click.echo(row[1] + "\t" + row[2] + "\t" + str(row[3]))
+                click.echo("price:\t$" + str(row[4]))
+                click.echo("amount:\t" + str(row[5]))
+                click.echo("total:\t$" + str(row[6]))
+                click.echo("\n")
         else:
-            cursor.execute("SELECT user, ticker, date, price, amount, totalPrice FROM Trades WHERE WHERE EXISTS(SELECT user FROM UserInfo WHERE user={username});")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT * FROM watchlist WHERE EXISTS(SELECT user_name FROM user WHERE user_name='" + username + "');")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchall():
+                click.echo(row[1] + "\t" + row[2] + "\t" + str(row[3]))
+                click.echo("price:\t$" + str(row[4]))
+                click.echo("amount:\t" + str(row[5]))
+                click.echo("total:\t$" + str(row[6]))
+                click.echo("\n")
     except:
         click.echo("No watches found for that user, try a different user or come back other time")
     finally:
@@ -403,31 +441,48 @@ def watch(username, viewall):
 @click.option('-a', '--amount', type=click.INT, help="Keep track of how many you purchased")
 def trade(username, ticker, amount):
     connection, cursor = connect()
+    
     try:
         cursor.execute("SELECT close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
         price = cursor.fetchone()
 
-        cursor.execute("SELECT ticker FROM Trades WHERE ticker='" + ticker + "' and user='{username}';")
+        cursor.execute("SELECT COUNT(*) FROM watchlist WHERE ticker='" + ticker + "' and user='" + username + "';")
         tickerIn = cursor.fetchone()
-        if (not amount and tickerIn > 0):
-            click.echo("You have already added the ticker to your watchlist")
-        elif(amount and tickerIn > 0):
-            cursor.execute("SELECT amount FROM Trades WHERE ticker='" + ticker + "' and user='{username}'")
-            currAmount = cursor.fetchone()
-            newAmount = currAmount + amount
-            cursor.execute("UPDATE Trades SET amount={newAmount} WHERE ticker='" + ticker + "' AND user='{username}'")
-            #TODO: implement price change algebra
+        
+        cursor.execute("SELECT COUNT(*) FROM user WHERE user_name='" + username + "';")
+        currUser = cursor.fetchone()
+
+        if (currUser[0] <= 0):
+            click.echo("Username does not exist")
         else:
-            newAmount = 0
-            if (amount):
-                newAmount = amount
-            cursor.execute("SELECT MAX(tradeID) FROM Trades")
-            currentID = cursor.fetchOne() + 1
-            now = datetime.now()
-            formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
-            cursor.executes("INSERT INTO Trades(tradeID, user, ticker, date, price, amount) VALUES({currentID}, {username}, {ticker}, {formatted_date}, {price}, {newAmount}}")
+            if (not amount and tickerIn[0] > 0):
+                click.echo("You have already added the ticker to your watchlist previously")
+            elif(amount and tickerIn[0] > 0):
+                cursor.execute("SELECT amount FROM watchlist WHERE ticker='" + ticker + "' and user='" + username + "'")
+                currAmount = cursor.fetchone()
+                newAmount = currAmount[0] + int(amount)
+                cursor.execute("UPDATE watchlist SET amount=" + str(newAmount) + ", total_price=" + str(newAmount*price[0]) + ", price=" + str(price[0]) + " WHERE ticker='" + ticker + "' AND user='" + username + "';")
+                connection.commit()
+                click.echo("Updated existing watchlist!")
+            else:
+                newAmount = 0
+                newID = 0
+                if (amount):
+                    newAmount = amount
+                cursor.execute("SELECT MAX(trade_id) FROM watchlist;")
+                currentID = cursor.fetchone()
+                if (currentID[0] != None):
+                    newID = currentID[0] + 1
+
+
+                if (currUser[0] > 0):
+                    now = datetime.now()
+                    formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+                    cursor.execute("INSERT INTO watchlist(trade_id, user, ticker, date, price, amount, total_price) VALUES(" + str(newID) + ", '" + username + "', '" + ticker + "', '" + formatted_date + "', " + str(price[0]) + ", " + str(newAmount) + ", " + str(newAmount*price[0]) + ");")
+                    click.echo("Added " + ticker + " to your watchlist!")
+                    connection.commit()
     except:
-        click.echo("Could not add {ticker} to your listing")
+        click.echo("Could not add " + ticker + " to your watchlist")
     finally:
         disconnect(connection, cursor)
 
