@@ -1,13 +1,14 @@
 import click
 from datetime import datetime
+import time
 import mysql.connector
 
 version = "v0.10"
 
-userid = "lamehta"
+userid = "k48shah"
 server = "localhost"
-database = "db_{userid}"
-password = "password"
+database = "ece356"
+password = "Katman098$"
 
 def connect():
     connection = mysql.connector.connect(
@@ -62,12 +63,16 @@ def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
             click.echo(cursor.fetchone())
         else:
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -80,12 +85,21 @@ def low(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -98,12 +112,21 @@ def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='" + ticker + "'AND date=''" + newDate + "'';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -116,12 +139,21 @@ def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -134,12 +166,21 @@ def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -152,12 +193,21 @@ def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='" + ticker + "' AND date='" + newDate + "';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -170,12 +220,21 @@ def summary(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='" + ticker + "' AND date='" + newDate + "';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, open, low, high, close, volume FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -188,12 +247,21 @@ def afterhours(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, adjclose FROM stock_info WHERE ticker='{ticker}' AND date='{newDate}';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, adj_close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
-            cursor.execute("SELECT ticker, date, adjclose FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
-            for row in cursor:
-                click.echo(row)
+            cursor.execute("SELECT ticker, date, adj_close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
+            num_fields = cursor.column_names
+            click.echo(num_fields)
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
@@ -207,11 +275,11 @@ def news(ticker, publisher):
     connection, cursor = connect()
     try:
         if (publisher):
-            cursor.execute("SELECT date, title, url FROM StockNews INNER JOIN Publisher ON StockNews.publisherId=Publisher.publisherID WHERE ticker='{ticker}' AND name='{publisher}' LIMIT 10;")
+            cursor.execute("SELECT date, title, url FROM StockNews INNER JOIN Publisher ON StockNews.publisherId=Publisher.publisherID WHERE ticker='" + ticker + "' AND name='{publisher}' LIMIT 10;")
             for row in cursor:
                 click.echo(row)
         else:
-            cursor.execute("SELECT date, title, url FROM StockNews WHERE ticker='{ticker}' LIMIT 10;")
+            cursor.execute("SELECT date, title, url FROM StockNews WHERE ticker='" + ticker + "' LIMIT 10;")
             for row in cursor:
                 click.echo(row)
     except:
@@ -226,20 +294,27 @@ def news(ticker, publisher):
 def desc(ticker):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, companyName, description FROM StockInfo INNER JOIN Company ON StockInfo.ticker=Company.ticker WHERE ticker='{ticker}';")
-        for row in cursor:
-            click.echo(row)
+        cursor.execute("SELECT ticker, name, market_cap, industry, sector, state, city  FROM company WHERE ticker='" + ticker + "';")
+        num_fields = cursor.column_names
+        click.echo(num_fields)
+        count = 0
+        for row in cursor.fetchone():
+            click.echo(str(num_fields[count]) + "\t" + str(row))
+            count += 1
     except:
         click.echo("There is no ticker:{ticker}")
     finally:
         disconnect(connection, cursor)
+
+
+#TODO: trendinfo command
 
 @main.command(name='brief', help="\tSome brief data to get an initial understanding of the company")
 @click.argument('ticker', default='AAPL', type=click.STRING)
 def brief(ticker):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT ticker, companyName, ipoDate, ipoPrice, description, url FROM StockInfo INNER JOIN Company ON StockInfo.ticker=Company.ticker INNER JOIN IPOData ON Company.ticker=IPOData.ticker WHERE ticker='{ticker}'")
+        cursor.execute("SELECT ticker, companyName, ipoDate, ipoPrice, description, url FROM StockInfo INNER JOIN Company ON StockInfo.ticker=Company.ticker INNER JOIN IPOData ON Company.ticker=IPOData.ticker WHERE ticker='" + ticker + "'")
         for row in cursor:
             click.echo(row)
     except:
@@ -253,13 +328,13 @@ def brief(ticker):
 def user(username, email):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT COUNT(user) FROM userInfo WHERE user='{username}'")
+        cursor.execute("SELECT COUNT(*) FROM userInfo WHERE user='" + username + "'")
         userCount = cursor.fetchone()
         if (userCount <= 0):
-            cursor.execute("SELECT COUNT(email) FROM userInfo WHERE email='{email}'")
+            cursor.execute("SELECT COUNT(email) FROM userInfo WHERE email='" + email + "'")
             emailCount = cursor.fetchone()
             if (emailCount <= 0):
-                cursor.execute("INSERT INTO userInfo (user, email) VALUES ('{username}', '{email}')")
+                cursor.execute("INSERT INTO userInfo (user, email) VALUES ('" + username + "', '" + email +"')")
                 click.echo("User has been made!")
             else:
                 click.echo("This email has already been used for another user")
@@ -271,7 +346,7 @@ def user(username, email):
         disconnect(connection, cursor)
 
 @main.command(name='talk', help='\tShow latest comments on a given stock!')
-@click.argument('ticker', default='N/A', type=click.string)
+@click.argument('ticker', default='N/A', type=click.STRING)
 def talk(ticker):
     connection, cursor = connect()
     try:
@@ -286,7 +361,7 @@ def talk(ticker):
 
 
 @main.command(name='comment', help='\tConversate with others on this stock!')
-@click.argument('ticker', default='N/A', type=click.string)
+@click.argument('ticker', default='N/A', type=click.STRING)
 @click.option('-u', '--user', help="Input your username!")
 @click.option('-m', '--message', required=True, help="Type your message after the tag in quotes")
 def comment(ticker, user):
@@ -329,18 +404,18 @@ def watch(username, viewall):
 def trade(username, ticker, amount):
     connection, cursor = connect()
     try:
-        cursor.execute("SELECT close FROM stock_info WHERE ticker='{ticker}' LIMIT 1;")
+        cursor.execute("SELECT close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
         price = cursor.fetchone()
 
-        cursor.execute("SELECT ticker FROM Trades WHERE ticker='{ticker}' and user='{username}';")
+        cursor.execute("SELECT ticker FROM Trades WHERE ticker='" + ticker + "' and user='{username}';")
         tickerIn = cursor.fetchone()
         if (not amount and tickerIn > 0):
             click.echo("You have already added the ticker to your watchlist")
         elif(amount and tickerIn > 0):
-            cursor.execute("SELECT amount FROM Trades WHERE ticker='{ticker}' and user='{username}'")
+            cursor.execute("SELECT amount FROM Trades WHERE ticker='" + ticker + "' and user='{username}'")
             currAmount = cursor.fetchone()
             newAmount = currAmount + amount
-            cursor.execute("UPDATE Trades SET amount={newAmount} WHERE ticker='{ticker}' AND user='{username}'")
+            cursor.execute("UPDATE Trades SET amount={newAmount} WHERE ticker='" + ticker + "' AND user='{username}'")
             #TODO: implement price change algebra
         else:
             newAmount = 0
