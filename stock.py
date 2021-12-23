@@ -1,6 +1,5 @@
 import click
 from datetime import datetime
-import time
 import mysql.connector
 
 version = "v0.10"
