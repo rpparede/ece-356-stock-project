@@ -7,7 +7,7 @@ version = "v0.10"
 userid = "k48shah"
 server = "localhost"
 database = "ece356"
-password = "Katman098$"
+password = ""
 
 def connect():
     connection = mysql.connector.connect(
@@ -73,7 +73,7 @@ def price(ticker, date):
                 click.echo(str(num_fields[count]) + "\t" + str(row))
                 count += 1
     except:
-        click.echo("There is no ticker:{ticker}")
+        click.echo("There is no ticker: " + ticker)
     finally:
         disconnect(connection, cursor)
 
@@ -100,7 +100,7 @@ def low(ticker, date):
                 click.echo(str(num_fields[count]) + "\t" + str(row))
                 count += 1
     except:
-        click.echo("There is no ticker:{ticker}")
+        click.echo("There is no ticker: " + ticker)
     finally:
         disconnect(connection, cursor)
 
@@ -127,7 +127,7 @@ def price(ticker, date):
                 click.echo(str(num_fields[count]) + "\t" + str(row))
                 count += 1
     except:
-        click.echo("There is no ticker:{ticker}")
+        click.echo("There is no ticker: " + ticker)
     finally:
         disconnect(connection, cursor)
 
@@ -317,7 +317,7 @@ def brief(ticker):
             click.echo(str(num_fields[count]) + "\t" + str(row))
             count += 1
     except:
-        click.echo("There is no ticker:{ticker}")
+        click.echo("There is no ticker: " + ticker)
     finally:
         disconnect(connection, cursor)
 
