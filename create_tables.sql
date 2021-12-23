@@ -51,6 +51,7 @@ CREATE TABLE news (
     ticker varchar(5) NOT NULL,
     date DATETIME NOT NULL,
     title varchar(255),
+    url text, 
     publisher_id int NOT NULL,
     PRIMARY KEY (news_id),
     FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id)

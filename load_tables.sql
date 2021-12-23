@@ -33,8 +33,8 @@ LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/news.csv' INTO T
     ESCAPED BY '\\'
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES 
-    (@news_id, @headline, @dummy, @date, @ticker)
-    SET news_id=@news_id, ticker=@ticker, date=@date, title=@headline, publisher_id=@news_id; 
+    (@news_id, @headline, @url, @date, @ticker)
+    SET news_id=@news_id, ticker=@ticker, date=@date, title=@headline, url=@url, publisher_id=@news_id; 
 
 -- load management
 LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/management.csv' INTO TABLE management
