@@ -7,7 +7,7 @@ version = "v0.10"
 userid = "k48shah"
 server = "localhost"
 database = "ece356"
-password = ""
+password = "Katman098$"
 
 def connect():
     connection = mysql.connector.connect(
@@ -57,12 +57,12 @@ def version(version):
 #stock.py price TSLA
 @main.command(name='price', help="\tShow the most recent price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+@click.option('-d', '--date', help="Input the date in this format yyyy-mm-dd to get data for a specific day")
 def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + date + "'';")
             click.echo(cursor.fetchone())
         else:
             cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
@@ -79,12 +79,12 @@ def price(ticker, date):
 
 @main.command(name='low', help="\tShow the lowest day price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+@click.option('-d', '--date', help="Input the date in this format yyyy-mm-dd to get data for a specific day")
 def low(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            cursor.execute("SELECT ticker, date, low FROM stock_info WHERE ticker='" + ticker + "' AND date='" + date + "';")
             num_fields = cursor.column_names
             
             count = 0
@@ -106,12 +106,12 @@ def low(ticker, date):
 
 @main.command(name='high', help="\tShow the highest day price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+@click.option('-d', '--date', help="Input the date in this format yyyy-mm-dd to get data for a specific day")
 def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='" + ticker + "'AND date=''" + newDate + "'';")
+            cursor.execute("SELECT ticker, date, high FROM stock_info WHERE ticker='" + ticker + "'AND date=''" + date + "'';")
             num_fields = cursor.column_names
             
             count = 0
@@ -133,12 +133,12 @@ def price(ticker, date):
 
 @main.command(name='close', help="\tShow the day closing price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+@click.option('-d', '--date', help="Input the date in this format yyyy-mm-dd to get data for a specific day")
 def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + date + "'';")
             num_fields = cursor.column_names
             
             count = 0
@@ -160,12 +160,12 @@ def price(ticker, date):
 
 @main.command(name='open', help="\tShow the day openning price of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+@click.option('-d', '--date', help="Input the date in this format yyyy-mm-dd to get data for a specific day")
 def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + newDate + "'';")
+            cursor.execute("SELECT ticker, date, open FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + date + "'';")
             num_fields = cursor.column_names
             
             count = 0
@@ -187,12 +187,12 @@ def price(ticker, date):
 
 @main.command(name='volume', help="\tShow the volume during the day of a company using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
-@click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
+@click.option('-d', '--date', help="Input the date in this format yyyy-mm-dd to get data for a specific day")
 def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='" + ticker + "' AND date='" + newDate + "';")
+            cursor.execute("SELECT ticker, date, volume FROM stock_info WHERE ticker='" + ticker + "' AND date='" + date + "';")
             num_fields = cursor.column_names
             
             count = 0
