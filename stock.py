@@ -7,7 +7,7 @@ versionid = "v0.10"
 userid = "k48shah"
 server = "localhost"
 database = "ece356"
-password = "Katman098$"
+password = ""
 
 def connect(): #connect to a mysql database
     connection = mysql.connector.connect(
