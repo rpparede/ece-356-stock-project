@@ -92,10 +92,10 @@ CREATE TABLE financial_info (
 
 CREATE TABLE trend_info (
     ticker varchar(5) NOT NULL,
-    monthTrend int, 
-    threeMonthTrend int, 
-    sixMonthTrend int, 
-    yearTrend int, 
+    month_trend int, 
+    three_month_trend int, 
+    six_month_trend int, 
+    year_trend int, 
     FOREIGN KEY (ticker) REFERENCES company(ticker)
 );
 
