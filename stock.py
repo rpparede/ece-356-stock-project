@@ -2,19 +2,19 @@ import click
 from datetime import datetime
 import mysql.connector
 
-version = "v0.10"
+versionid = "v0.10"
 
 userid = "k48shah"
 server = "localhost"
 database = "ece356"
 password = "Katman098$"
 
-def connect():
+def connect(): #connect to a mysql database
     connection = mysql.connector.connect(
-        host=server,
-        database=database,
-        user=userid,
-        password=password
+        host=server, #stated above
+        database=database, #stated above
+        user=userid, #stated above
+        password=password #stated above
     )
     if connection.is_connected():
         dbInfo = connection.get_server_info()
@@ -27,7 +27,7 @@ def connect():
         print("Connection is not established")
     return [connection, cursor]
 
-def disconnect(connection, cursor):
+def disconnect(connection, cursor): #disconnect from a mysql database (typically after commands end)
     if connection.is_connected():
         cursor.close()
         connection.close()
@@ -43,8 +43,8 @@ def main():
     pass
 
 @main.command(name='version', help="\tShow version number of CLI")
-def version(version):
-    click.echo(version)
+def version():
+    click.echo(versionid)
 
 # @main.command(name='update', help="\tUpdate all price history tables with new data")
 # def update():
@@ -62,8 +62,13 @@ def price(ticker, date):
     connection, cursor = connect()
     try:
         if (date):
-            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date=''" + date + "'';")
-            click.echo(cursor.fetchone())
+            cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' AND date='" + date + "';")
+            num_fields = cursor.column_names
+            
+            count = 0
+            for row in cursor.fetchone():
+                click.echo(str(num_fields[count]) + "\t" + str(row))
+                count += 1
         else:
             cursor.execute("SELECT ticker, date, close FROM stock_info WHERE ticker='" + ticker + "' LIMIT 1;")
             num_fields = cursor.column_names
@@ -212,7 +217,7 @@ def price(ticker, date):
     finally:
         disconnect(connection, cursor)
 
-@main.command(name='summary', help="\tShow a brief summary of the company's trading day using its ticker!")
+@main.command(name='summary', help="\tShow a brief summary of the company's trading day!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
 @click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
 def summary(ticker, date):
@@ -239,7 +244,7 @@ def summary(ticker, date):
     finally:
         disconnect(connection, cursor)
 
-@main.command(name='afterhours', help="\tShow the after hours trading price! using its ticker")
+@main.command(name='afterhours', help="\tShow the after hours trading price using its ticker!")
 @click.argument('ticker', default='AAPL', type=click.STRING)
 @click.option('-d', '--date', help="Input the date in this format dd/mm/yyyy to get data for a specific day")
 def afterhours(ticker, date):
@@ -405,7 +410,7 @@ def watch(username, viewall):
     connection, cursor = connect()
     try:
         if (viewall):
-            cursor.execute("SELECT * FROM watchlist WHERE EXISTS(SELECT user_name FROM user WHERE user_name='" + username + "');")
+            cursor.execute("SELECT * FROM watchlist WHERE user='" + username + "';")
             num_fields = cursor.column_names
             
             count = 0
@@ -416,7 +421,7 @@ def watch(username, viewall):
                 click.echo("total:\t$" + str(row[6]))
                 click.echo("\n")
         else:
-            cursor.execute("SELECT * FROM watchlist WHERE EXISTS(SELECT user_name FROM user WHERE user_name='" + username + "');")
+            cursor.execute("SELECT * FROM watchlist WHERE user='" + username + "' LIMIT 10;")
             num_fields = cursor.column_names
             
             count = 0
@@ -427,7 +432,7 @@ def watch(username, viewall):
                 click.echo("total:\t$" + str(row[6]))
                 click.echo("\n")
     except:
-        click.echo("No watches found for that user, try a different user or come back other time")
+        click.echo("No watches found for that user, try a different user or come back another time")
     finally:
         disconnect(connection, cursor)
   
